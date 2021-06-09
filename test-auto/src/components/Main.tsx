@@ -23,7 +23,6 @@ const Main = () => {
   const [population, setPopulation] = useState("");
   const [loadingCountries, setLoadingCountries] = useState(false);
   const [loadingCities, setLoadingCities] = useState(false);
-  const [loadingPopulation, setLoadingPopulation] = useState(false);
 
   const [isInvalid, setInvalid] = useState(false);
 
@@ -55,21 +54,18 @@ const Main = () => {
 
   useEffect(() => {
     if (city) {
-      setLoadingPopulation(true);
       api
         .get(`/getPopulation/${city.name}`)
         .then((response) => {
-          console.log("populaaaation: ", city.name);
           if (city.name && response.data === "") {
             setInvalid(true);
             return;
           }
+          
           setPopulation(response.data);
-          console.log("population: ", population);
         })
-        .finally(() => setLoadingPopulation(false));
     }
-  }, [city]);
+  }, [city, population]);
   useEffect(() => {}, [isInvalid]);
 
   const handleInputChange = (model: string) => (value: string) => {
@@ -106,7 +102,6 @@ const Main = () => {
         placeholder="City"
         value={city}
         onKeyDown={() => {
-          console.log("typing:");
           setPopulation("");
           setInvalid(false);
         }}
